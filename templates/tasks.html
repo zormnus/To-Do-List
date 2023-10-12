@@ -1,0 +1,176 @@
+{% extends 'base-head.html' %}
+{% load static %}
+
+{% block styles %}
+    <style>
+        .fade-out {
+            animation: fadeOut ease 1s;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+	</style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row d-flex justify-content-center mt-5">
+            <div class="col-lg-2">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                    Создать задачу
+                </button>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            {% if object_list %}
+                {% for task in object_list %}
+                    <div class="col-xl-6 col-lg-3 d-flex mt-5">
+                        <div class="card flex-fill position-relative" id='task{{ task.pk }}'>
+                            <img class="img-fluid" src="{% if task.image %}{{ task.image.url }}{% endif %}" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ task.title }} ({{ task.category.name }})</h5>
+                                <p class="card-text">{{ task.description }}</p>
+                                <p class="card-text">Дата создания {{ task.creation_dateTime }}</p>
+                                <p class="card-text">Дедлайн {{ task.deadline_dateTime }}</p>
+                                <a id="taskDoneBtn{{ task.pk }}" onclick="taskRemoveAnimation({{ task.pk }})" class="btn btn-primary">Отметить как сделанное</a>
+                            </div>
+                            <div class="position-absolute top-0 start-100 translate-middle">
+                                <button class="btn btn-primary btn-sm"
+                                        style="width: 30px; height: 30px; border-radius: 15px; padding: 0;
+                                        position: relative;" data-bs-toggle="modal" data-bs-target="#task{{ task.pk }}EditModal">
+                                    <img class="icon" src="{% static 'vendor/images/pen-to-square-solid.svg' %}" alt="edit_icon" style="width: 20px; height: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-lg-12 col-mb-5 mt-5 justify-content-center text-center">
+                    <h4>Тут пока что ничего нет</h4>
+                    <img class="img-fluid mb-5" src="{% static 'vendor/images/out-0.png' %}" alt="" width="50%" style="border-radius: 50px;">
+                </div>
+            {% endif %}
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center mt-5">
+                    <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
+                        <a class="page-link"
+                           href="{% if page_obj.has_previous %} {% url 'tasks:paginator' page_obj.previous_page_number %} {% else %} # {% endif %}"
+                           tabindex="-1" aria-disabled="true">
+                            Предыдущая
+                        </a>
+                    </li>
+                    {% for page in paginator.page_range %}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'tasks:paginator' page %}">
+                                {{ page }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
+                        <a class="page-link"
+                           href="{% if page_obj.has_next %} {% url 'tasks:paginator' page_obj.next_page_number %} {% else %} # {% endif %}">
+                            Следующая
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
+
+        {% for form in tasks_edit_forms %}
+            <div class="modal fade" id="task{{ form.instance.pk }}EditModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modelAuthLabel">Изменение задачи</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{% url 'tasks:task_update' form.instance.pk %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <img class="img-fluid" src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" alt="">
+                                    <label for="{{ form.image.id_for_label }}" class="form-label">Изображение задания</label>
+                                    {{ form.image }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">Описание задачи</label>
+                                    {{ form.description }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="task_deadline" class="form-label">Дедлайн задачи</label>
+                                    {{ form.deadline_dateTime }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="{{ form.category.id_for_label }}" class="form-label">Категория задачи</label>
+                                    {{ form.category }}
+                                </div>
+                                <div class="mb-3 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="modal fade" id="createTaskModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modelAuthLabel">Новая задача</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'tasks:task_create' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ create_task_form.title.id_for_label }}" class="form-label">Заголовок задания</label>
+                                {{ create_task_form.title }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ create_task_form.image.id_for_label }}" class="form-label">Изображение задания</label>
+                                {{ create_task_form.image }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ create_task_form.description.id_for_label }}" class="form-label">Описание задачи</label>
+                                {{ create_task_form.description }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ create_task_form.deadline_dateTime.id_for_label }}" class="form-label">Дедлайн задачи</label>
+                                {{ create_task_form.deadline_dateTime }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ create_task_form.category.id_for_label }}" class="form-label">Категория задачи</label>
+                                {{ create_task_form.category }}
+                            </div>
+                            <div class="mb-3 d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Создать</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'vendor/js/anims.js' %}"></script>
+{#    <script src="{% static 'vendor/js/wow.min.js' %}"></script>#}
+{#    <script>#}
+{#        new WOW().init();#}
+{#    </script>#}
+{% endblock %}

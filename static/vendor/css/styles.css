@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(215deg, #1595DD 0%, #FFF 100%) no-repeat center top fixed;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+}
+
+
+.user-mini-img {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    border-radius: 32px;
+}
+
+.about__title {
+    width: 500px;
+    height: 250px;
+    flex-shrink: 0;
+}
+
+.about__title img {
+    flex-shrink: 0;
+}
+
+.offer__text {
+    margin-top: 100px;
+}
+
+.offer__title {
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    font-size: 40px;
+}
+
+.offer__description {
+    font-size: 25px;
+}
+
+#start-btn {
+    border-radius: 41px;
+    background: linear-gradient(140deg, #78EAA5 0%, rgba(160, 221, 30, 0.60) 100%);
+    box-shadow: 0 4px 4px 0 rgba(33, 60, 24, 0.62);
+    color: black;
+    font-weight: bold;
+    width: 306px;
+    height: 96px;
+    flex-shrink: 0;
+}
+
+#start-link {
+    text-decoration: none;
+}
+
+.offer__img {
+    width: 740px;
+    height: 690px;
+    flex-shrink: 0;
+}
+
+.oauth__refs img {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    border-radius: 32px;
+}
+
+#profile-edit-save-btn {
+    border-radius: 41px;
+    background: linear-gradient(140deg, #78EAA5 0%, rgba(160, 221, 30, 0.60) 100%);
+    box-shadow: 0 4px 4px 0 rgba(33, 60, 24, 0.62);
+    color: black;
+    width: 306px;
+    height: 60px;
+    flex-shrink: 0;
+}
+
+#heatmap {
+    width: 5%;
+    height: 5%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 10 колонок для ячеек */
+    grid-gap: 2px; /* Расстояние между ячейками */
+}
+
+.cell {
+    width: 10px;
+    height: 10px;
+    background-color: #e0e0e0; /* Цвет неактивной ячейки */
+}
+
+.info-text {
+    display: none; /* Начально скрыть текст */
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 10px;
+    pointer-events: none; /* Чтобы текст не мешал наведению на ячейку */
+}
+

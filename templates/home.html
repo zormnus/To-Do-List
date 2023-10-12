@@ -1,0 +1,35 @@
+{% extends 'base-head.html' %}
+{% load static %}
+
+{% block styles %}
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+{% endblock %}
+
+{% block content %}
+<!--Офферная конструкция-->
+    <div class="container offer">
+        <div class="row">
+            <div class="col-lg-6 col-sm-9 offer__text animate__animated animate__fadeInDown">
+                <h1 class="offer__title " style="font-weight: bold">Навсегда избавься от прокрастинации</h1>
+                <p class="offer__description text-md-start">Онлайн планировщик задач - лучшее решение твоих организационных проблем</p>
+                <button class="btn btn-lg" id="start-btn">
+                    <a href="#" style="color: black;font-weight: bold;text-decoration: none;">
+                        <span style="color: black; font-weight: bold; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+                            Начать
+                        </span>
+                    </a>
+                </button>
+            </div>
+            <div class="col-lg-6 col-sm-12 mt-sm-5 mb-sm-5 text-center d-none d-lg-block">
+                <img class="img-fluid offer__img" src="{% static 'vendor/images/exam-2428208_1920.png' %}" alt="home-img">
+            </div>
+        </div>
+    </div>
+
+    {% block scripts %}
+    {% endblock %}
+
+{% endblock %}
