@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'silk',
     'users.apps.UsersConfig',
     'tasks.apps.TasksConfig',
 ]
@@ -53,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'todo3.urls'
